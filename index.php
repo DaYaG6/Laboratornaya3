@@ -1,41 +1,33 @@
 <?php
 require 'vendor/autoload.php';
 
-use App\MagicClass;
+use App\Point;
+use App\Vector;
 
-echo "=== MagicClass demo ===\n";
+echo "=== Geometry demo ===\n";
 
-// Создание объекта (вызовет __construct)
-$mc = new MagicClass();
+// Создаём точку T1 с произвольными координатами
+$T1 = new Point(2.5, -1.0);
+echo "T1 = $T1\n";
 
-// Попытка вывести объект как строку (вызовет __toString)
-echo $mc;
+// Произвольный вектор V1
+$V1 = new Vector(3.0, 4.0); // длина будет 5
+echo "V1 = $V1, length = " . $V1->length() . "\n";
 
-// Вызов как функции (вызовет __invoke)
-$mc('arg1', 'arg2');
+// Нулевой вектор V2
+$V2 = new Vector(0.0, 0.0);
+echo "V2 = $V2, isZero = " . ($V2->isZero() ? 'true' : 'false') . "\n";
 
-// Доступ к несуществующему свойству (вызовет __get и __set)
-$mc->foo = 'bar';    // __set
-echo $mc->foo . "\n"; // __get
+// Вектор V3 перпендикулярный V1
+// Для того чтобы создать перпендикулярный вектор к (x,y) — можно взять (-y, x)
+$V3 = new Vector(-$V1->y, $V1->x);
+echo "V3 = $V3, length = " . $V3->length() . "\n";
 
-// Проверка isset/unset
-isset($mc->foo);     // __isset
-unset($mc->foo);     // __unset
+// Проверим перпендикулярность V1 и V3
+echo "V1 and V3 perpendicular? " . ($V1->isPerpendicular($V3) ? 'yes' : 'no') . "\n";
 
-// Вызов несуществующего метода (вызовет __call)
-$mc->someMethod('x', 'y');
+// Перенесём точку T1 на вектор V1
+$T1->moveByVector($V1);
+echo "T1 after moving by V1: $T1\n";
 
-// Вызов несуществующего статического метода (вызовет __callStatic)
-MagicClass::someStatic('a', 'b');
-
-// Клонирование (вызовет __clone)
-$mc2 = clone $mc;
-
-// Сериализация и десериализация (вызовет __sleep и __wakeup)
-$s = serialize($mc);
-$mc3 = unserialize($s);
-
-// var_dump (вызовет __debugInfo)
-var_dump($mc);
-
-echo "=== End of MagicClass demo ===\n";
+echo "=== End of Geometry demo ===\n";
